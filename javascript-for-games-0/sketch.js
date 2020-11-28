@@ -1,31 +1,6 @@
 let amount = 1;
 let lag = 12;
 
-// class Car {
-// 	constructor() {
-// 		this.speed = 5;
-// 		// this.x = 300;
-// 		// this.y = 239;
-// 		this.pos = createVector(300, 239);
-// 		this.rotation = 0;
-// 		this.direction = [];
-// 		for (var i = 0; i < lag; i++) {
-// 			this.direction.push(0);
-// 		}
-// 		// this.raycasts = 9;
-// 		// this.nn = new NeuralNetwork(this.raycasts, 2 * this.raycasts, 1);
-// 	}
-// 	draw() {
-// 		push();
-// 		rectMode(CENTER);
-// 		translate(this.pos);
-// 		rotate(this.rotation);
-// 		fill(127, 63);
-// 		rect(0, 0, 50, 25);
-// 		pop();
-// 	}
-// }
-
 
 // const car1 = new Car();
 const cars = [];
@@ -62,20 +37,35 @@ function draw() {
 
 	// v1 = createVector(300, 239);
 
-	if (keyIsDown(DOWN_ARROW)) {
-		// if (cars[0].rotation != cars[0].direction) {
-		// 	cars[0].direction = (cars[0].rotation + cars[0].direction * 23) / 24;
-		// }
-		cars[0].pos.x -= cars[0].speed * cos(cars[0].direction[lag - 1]);
-		cars[0].pos.y -= cars[0].speed * sin(cars[0].direction[lag - 1]);
-	}
+
+	// if (keyIsDown(DOWN_ARROW)) {
+	// 	// if (cars[0].rotation != cars[0].direction) {
+	// 	// 	cars[0].direction = (cars[0].rotation + cars[0].direction * 23) / 24;
+	// 	// }
+	//
 	if (keyIsDown(UP_ARROW)) {
 		// if (cars[0].rotation != cars[0].direction) {
 		// 	cars[0].direction = (cars[0].rotation + cars[0].direction * 23) / 24;
 		// }
-		cars[0].pos.x += cars[0].speed * cos(cars[0].direction[lag - 1]);
-		cars[0].pos.y += cars[0].speed * sin(cars[0].direction[lag - 1]);
+
+		cars[0].invSpeed = cars[0].invSpeed * cars[0].mult;
+
+		cars[0].speed = cars[0].maxSpeed - cars[0].invSpeed;
+		// noLoop();
 	}
+	else {
+		cars[0].speed = cars[0].speed * cars[0].mult;
+		cars[0].invSpeed = cars[0].maxSpeed - cars[0].speed;
+	}
+
+	if (cars[0].speed < 0.05) {
+      cars[0].speed = 0;
+	  cars[0].invSpeed = cars[0].maxSpeed;
+    }
+
+	cars[0].pos.x += cars[0].speed * cos(cars[0].direction[lag - 1]);
+	cars[0].pos.y += cars[0].speed * sin(cars[0].direction[lag - 1]);
+
 	if (keyIsDown(LEFT_ARROW)) {
 		cars[0].rotation -= QUARTER_PI / 12;
 		cars[0].direction[0] -= QUARTER_PI / 12;

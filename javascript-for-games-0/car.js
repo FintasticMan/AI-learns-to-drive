@@ -1,6 +1,9 @@
 class Car {
 	constructor() {
-		this.speed = 5;
+		this.speed = 0;
+		this.maxSpeed = 10;
+		this.invSpeed = this.maxSpeed;
+		this.mult = 0.95;
 		// this.x = 300;
 		// this.y = 239;
 		this.pos = createVector(300, 239);
@@ -10,7 +13,7 @@ class Car {
 			this.direction.push(0);
 		}
 		// this.raycasts = 9;
-		// this.nn = new NeuralNetwork(this.raycasts, 2 * this.raycasts, 1);
+		// this.nn = new NeuralNetwork(this.raycasts + 1, 2 * (this.raycasts + 1), 1);
 	}
 	draw() {
 		push();
