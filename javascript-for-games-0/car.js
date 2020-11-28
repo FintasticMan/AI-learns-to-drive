@@ -12,8 +12,6 @@ class Car {
 		for (var i = 0; i < lag; i++) {
 			this.direction.push(0);
 		}
-		// this.raycasts = 9;
-		// this.nn = new NeuralNetwork(this.raycasts + 1, 2 * (this.raycasts + 1), 1);
 	}
 	draw() {
 		push();
