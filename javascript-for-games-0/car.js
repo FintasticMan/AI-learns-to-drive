@@ -1,9 +1,9 @@
 class Car {
 	constructor() {
 		this.speed = 0;
-		this.maxSpeed = 10;
+		this.maxSpeed = 7.5;
 		this.invSpeed = this.maxSpeed;
-		this.mult = 0.95;
+		this.mult = 0.955;
 		// this.x = 300;
 		// this.y = 239;
 		this.pos = createVector(300, 239);

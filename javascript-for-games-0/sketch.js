@@ -1,5 +1,5 @@
 let amount = 1;
-let lag = 12;
+let lag = 8;
 
 
 // const car1 = new Car();
