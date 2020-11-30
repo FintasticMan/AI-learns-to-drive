@@ -19,8 +19,8 @@ function setup() {
 		[createVector(800, 250), createVector(760, 320)],
 		[createVector(760, 320), createVector(590, 350)],
 		[createVector(590, 350), createVector(540, 500)],
-		[createVector(540, 500), createVector(350, 440)],
-		[createVector(350, 440), createVector(340, 350)],
+		[createVector(540, 500), createVector(350, 470)],
+		[createVector(350, 470), createVector(340, 350)],
 		[createVector(340, 350), createVector(180, 250)],
 		[createVector(180, 250), createVector(300, 200)],
 	];
