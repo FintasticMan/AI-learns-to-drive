@@ -108,8 +108,10 @@ function linesCross(line1, line2) {
 
 
 	let den = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4);
-	let t = ((x1 - x3) * (y3 - y4) - (y1 - y3) * (x3 - x4)) / den;
-	let u = -(((x1 - x2) * (y1 - y3) - (y1 - y2) * (x1 - x3)) / den);
+	let tNum = (x1 - x3) * (y3 - y4) - (y1 - y3) * (x3 - x4);
+	let uNum = -((x1 - x2) * (y1 - y3) - (y1 - y2) * (x1 - x3));
+	let t = tNum / den;
+	let u = uNum / den;
 
 	if (t >= 0 && t <= 1 && u >= 0 && u <= 1) {
 		return true;
