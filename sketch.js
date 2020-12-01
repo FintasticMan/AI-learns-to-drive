@@ -70,7 +70,7 @@ function draw() {
 		cars[i].move();
 
 		// Kill the car if it is hitting the track
-		if (cars[i].isColliding(raceTrack) === true) {
+		if (cars[i].isColliding(raceTrack)) {
 			cars[i] = new Car(createVector(400, 150), 0);
 		} else {
 			// Draw the car and the raycasts

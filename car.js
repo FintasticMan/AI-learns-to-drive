@@ -131,7 +131,7 @@ class Car {
 
 				intersection = this.rays[i].cast([track.innerWalls[j].posA, track.innerWalls[j].posB]);
 
-				if (!intersection === false) {
+				if (intersection !== false) {
 					intersections.push(intersection);
 				}
 				intersection = undefined;
@@ -142,7 +142,7 @@ class Car {
 
 				intersection = this.rays[i].cast([track.outerWalls[j].posA, track.outerWalls[j].posB]);
 
-				if (!intersection === false) {
+				if (intersection !== false) {
 					intersections.push(intersection);
 				}
 				intersection = undefined;
