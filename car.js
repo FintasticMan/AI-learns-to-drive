@@ -19,7 +19,27 @@ class Car {
 		for (var i = 0; i < lag; i++) {
 			this.direction.push(0);
 		}
+
+		this.raycasts = 7;
+		this.fov = PI;
+		this.rays = [];
+
+		for (let i = 0; i < this.raycasts; i++) {
+			this.rays.push(new Ray(this.pos, this.rotation - this.fov / 2 + this.fov / (this.raycasts - 1) * i));
+		}
+
+		// this.rays = [
+		// 	new Ray(this.pos, this.rotation - HALF_PI),
+		// 	new Ray(this.pos, this.rotation - HALF_PI / 3 * 2),
+		// 	new Ray(this.pos, this.rotation - (HALF_PI / 3)),
+		// 	new Ray(this.pos, this.rotation),
+		// 	new Ray(this.pos, this.rotation + HALF_PI / 3),
+		// 	new Ray(this.pos, this.rotation + HALF_PI / 3 * 2),
+		// 	new Ray(this.pos, this.rotation + HALF_PI),
+		// ];
+
 	}
+
 	draw() {
 		push();
 		rectMode(CENTER);
@@ -30,6 +50,7 @@ class Car {
 		rect(0, 0, this.l, this.w);
 		pop();
 	}
+	
 	isColliding(track) {
 		// Calculate all four corners of the car
 
@@ -85,5 +106,119 @@ class Car {
 		// If it doesn't, return false
 
 		return false;
+	}
+
+	raycast(track) {
+
+		// Calculate the rays' positions and directions
+		for (let i = 0; i < this.raycasts; i++) {
+			this.rays[i] = new Ray(this.pos, this.rotation - this.fov / 2 + this.fov / (this.raycasts - 1) * i);
+		}
+
+		let casts = [];
+
+		// Cycle through all of the rays
+		for (let i = 0; i < this.rays.length; i++) {
+
+			let intersection;
+			let intersections = [];
+
+			// For every ray, cycle through all of the walls, and find out if
+			// they intersect.  If they do, add the intersection point to an
+			// array
+
+			for (let j = 0; j < track.innerWalls.length; j++) {
+
+				intersection = this.rays[i].cast([track.innerWalls[j].posA, track.innerWalls[j].posB]);
+
+				if (!intersection === false) {
+					intersections.push(intersection);
+				}
+				intersection = undefined;
+
+			}
+
+			for (let j = 0; j < track.outerWalls.length; j++) {
+
+				intersection = this.rays[i].cast([track.outerWalls[j].posA, track.outerWalls[j].posB]);
+
+				if (!intersection === false) {
+					intersections.push(intersection);
+				}
+				intersection = undefined;
+
+			}
+
+			// For each ray, find out which of the intersections found before is
+			// the closest to the car
+			for (let j = 0; j < intersections.length; j++) {
+
+				if (j === 0) {
+					casts.push(intersections[j]);
+				} else {
+					let distanceCurrent = sqrt(sq(intersections[j].x - this.pos.x) + sq(intersections[j].y - this.pos.y));
+					let distanceSmallest = sqrt(sq(casts[i].x - this.pos.x) + sq(casts[i].y - this.pos.y));
+
+					if (distanceCurrent < distanceSmallest) {
+						casts[i] = intersections[j]
+					}
+				}
+
+			}
+		}
+
+		// Draw the rays
+		for (let i = 0; i < casts.length; i++) {
+			push();
+			stroke(255);
+			strokeWeight(2);
+			line(this.pos.x, this.pos.y, casts[i].x, casts[i].y);
+			pop();
+		}
+
+		// Return the intersection points
+		return casts;
+	}
+
+
+
+	move() {
+		// My weird implementation for drifting, I use an array with the length
+		// of the amount I want the direction to lag behind, and move all of the
+		// values along it every frame
+		for (let i = lag - 1; i > 0; i--) {
+			this.direction[i] = this.direction[i - 1];
+		}
+
+		// If the up arrow is pressed, accelerate, otherwise decellerate
+		if (keyIsDown(UP_ARROW)) {
+			this.invSpeed = this.invSpeed * this.mult;
+
+			this.speed = this.maxSpeed - this.invSpeed;
+			// noLoop();
+		} else {
+			this.speed = this.speed * this.mult;
+			this.invSpeed = this.maxSpeed - this.speed;
+		}
+
+		// If the current speed is low enough, just stop the car
+		if (this.speed < 0.05) {
+		  this.speed = 0;
+		  this.invSpeed = this.maxSpeed;
+		}
+
+		// Rotate the car
+		if (keyIsDown(LEFT_ARROW)) {
+			this.rotation -= QUARTER_PI / 12;
+			this.direction[0] -= QUARTER_PI / 12;
+		}
+		if (keyIsDown(RIGHT_ARROW)) {
+			this.rotation += QUARTER_PI / 12;
+			this.direction[0] += QUARTER_PI / 12;
+		}
+
+		// Calculate the amount to move the car
+		this.pos.x += this.speed * cos(this.direction[lag - 1]);
+		this.pos.y += this.speed * sin(this.direction[lag - 1]);
 	}
 }

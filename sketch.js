@@ -1,8 +1,9 @@
+// The amount of cars, the amount of frames the direction lags behind the
+// rotation (used for drifting), and the positions of the walls of the track
 let amount = 1;
 let lag = 8;
 let innerPos;
 let outerPos;
-
 
 const cars = [];
 let raceTrack;
@@ -11,6 +12,8 @@ function setup() {
 	createCanvas(1280, 720);
 	background(127);
 	strokeWeight(4);
+
+	// All of the lines of the track
 
 	innerPos = [
 		[createVector(300, 200), createVector(560, 140)],
@@ -41,57 +44,41 @@ function setup() {
 		[createVector(70, 320), createVector(60, 200)],
 		[createVector(60, 200), createVector(180, 120)],
 	];
+
+	raceTrack = new RaceTrack(innerPos, outerPos);
+
+	// Create the correct amount of cars
 	for (let i = 0; i < amount; i++) {
 		cars.push(new Car(createVector(400, 150), 0));
 	}
-	raceTrack = new RaceTrack(innerPos, outerPos);
+	// noLoop();
 }
 
 function draw() {
+	// Clear the screen
 	push();
 	noStroke();
 	fill(127);
 	rect(0, 0, width, height);
 	pop();
+
 	raceTrack.draw();
 
-	for (let i = lag - 1; i > 0; i--) {
-		cars[0].direction[i] = cars[0].direction[i - 1];
-	}
-
-
-	if (keyIsDown(UP_ARROW)) {
-		cars[0].invSpeed = cars[0].invSpeed * cars[0].mult;
-
-		cars[0].speed = cars[0].maxSpeed - cars[0].invSpeed;
-		// noLoop();
-	} else {
-		cars[0].speed = cars[0].speed * cars[0].mult;
-		cars[0].invSpeed = cars[0].maxSpeed - cars[0].speed;
-	}
-
-	if (cars[0].speed < 0.05) {
-      cars[0].speed = 0;
-	  cars[0].invSpeed = cars[0].maxSpeed;
-    }
-
-	cars[0].pos.x += cars[0].speed * cos(cars[0].direction[lag - 1]);
-	cars[0].pos.y += cars[0].speed * sin(cars[0].direction[lag - 1]);
-
-	if (keyIsDown(LEFT_ARROW)) {
-		cars[0].rotation -= QUARTER_PI / 12;
-		cars[0].direction[0] -= QUARTER_PI / 12;
-	}
-	if (keyIsDown(RIGHT_ARROW)) {
-		cars[0].rotation += QUARTER_PI / 12;
-		cars[0].direction[0] += QUARTER_PI / 12;
-	}
+	// Cycle through all of the cars
 	for (let i = 0; i < cars.length; i++) {
-		cars[i].draw();
+		// Read the inputs
+		cars[i].move();
+
+		// Kill the car if it is hitting the track
 		if (cars[i].isColliding(raceTrack) === true) {
 			cars[i] = new Car(createVector(400, 150), 0);
+		} else {
+			// Draw the car and the raycasts
+			cars[i].draw();
+			cars[i].raycast(raceTrack);
 		}
 	}
+
 }
 
 
@@ -106,13 +93,14 @@ function linesCross(line1, line2) {
 	let x4 = line2[1].x;
 	let y4 = line2[1].y;
 
-
+	// Calculate t and u
 	let den = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4);
 	let tNum = (x1 - x3) * (y3 - y4) - (y1 - y3) * (x3 - x4);
 	let uNum = -((x1 - x2) * (y1 - y3) - (y1 - y2) * (x1 - x3));
 	let t = tNum / den;
 	let u = uNum / den;
 
+	// Return true if the intersection is within the two line segments
 	if (t >= 0 && t <= 1 && u >= 0 && u <= 1) {
 		return true;
 	} else {
