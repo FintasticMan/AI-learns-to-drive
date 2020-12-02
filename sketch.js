@@ -5,6 +5,11 @@ let lag = 8;
 let innerPos;
 let outerPos;
 
+let drawRaycasts = true;
+let deadCars = 0;
+
+let generation = 0;
+
 const cars = [];
 let raceTrack;
 
@@ -47,10 +52,8 @@ function setup() {
 
 	raceTrack = new RaceTrack(innerPos, outerPos);
 
-	// Create the correct amount of cars
-	for (let i = 0; i < amount; i++) {
-		cars.push(new Car(createVector(400, 150), 0));
-	}
+	newGeneration();
+
 	// noLoop();
 }
 
@@ -66,19 +69,28 @@ function draw() {
 
 	// Cycle through all of the cars
 	for (let i = 0; i < cars.length; i++) {
-		// Read the inputs
-		cars[i].move();
+		if (cars[i].alive) {
+			// Read the inputs
+			cars[i].move();
 
-		// Kill the car if it is hitting the track
-		if (cars[i].isColliding(raceTrack)) {
-			cars[i] = new Car(createVector(400, 150), 0);
+			// Kill the car if it is hitting the track
+			if (cars[i].isColliding(raceTrack)) {
+				cars[i].alive = false;
+				deadCars++;
+			} else {
+				// Draw the car and the raycasts
+				cars[i].draw();
+				cars[i].raycast(raceTrack);
+			}
+
 		} else {
-			// Draw the car and the raycasts
-			cars[i].draw();
-			cars[i].raycast(raceTrack);
+			deadCars++;
 		}
 	}
-
+	if (deadCars === cars.length) {
+		newGeneration();
+	}
+	deadCars = 0;
 }
 
 
@@ -106,4 +118,19 @@ function linesCross(line1, line2) {
 	} else {
 		return false;
 	}
+}
+
+function newGeneration() {
+	// Create the correct amount of cars
+	if (cars.length === 0) {
+		for (let i = 0; i < amount; i++) {
+			cars.push(new Car(createVector(400, 150), 0));
+		}
+	} else {
+		for (let i = 0; i < amount; i++) {
+			cars[i] = new Car(createVector(400, 150), 0);
+		}
+	}
+
+	generation++;
 }

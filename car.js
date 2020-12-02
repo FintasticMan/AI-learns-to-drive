@@ -12,6 +12,7 @@ class Car {
 		this.theta = atan(this.w / this.l);
 		this.hyp = sqrt(sq(this.l / 2) + sq(this.w / 2));
 
+		this.alive = true;
 		this.pos = pos;
 		this.rotation = rot;
 		this.direction = [];
@@ -20,7 +21,7 @@ class Car {
 			this.direction.push(0);
 		}
 
-		this.raycasts = 7;
+		this.raycasts = 9;
 		this.fov = PI;
 		this.rays = [];
 
@@ -50,7 +51,7 @@ class Car {
 		rect(0, 0, this.l, this.w);
 		pop();
 	}
-	
+
 	isColliding(track) {
 		// Calculate all four corners of the car
 
@@ -116,6 +117,7 @@ class Car {
 		}
 
 		let casts = [];
+		let distances = [];
 
 		// Cycle through all of the rays
 		for (let i = 0; i < this.rays.length; i++) {
@@ -153,31 +155,35 @@ class Car {
 			// the closest to the car
 			for (let j = 0; j < intersections.length; j++) {
 
+				let distanceCurrent = sqrt(sq(intersections[j].x - this.pos.x) + sq(intersections[j].y - this.pos.y));
 				if (j === 0) {
 					casts.push(intersections[j]);
+					distances.push(distanceCurrent);
 				} else {
-					let distanceCurrent = sqrt(sq(intersections[j].x - this.pos.x) + sq(intersections[j].y - this.pos.y));
 					let distanceSmallest = sqrt(sq(casts[i].x - this.pos.x) + sq(casts[i].y - this.pos.y));
 
 					if (distanceCurrent < distanceSmallest) {
-						casts[i] = intersections[j]
+						casts[i] = intersections[j];
+						distances[i] = distanceCurrent;
 					}
 				}
 
 			}
 		}
 
-		// Draw the rays
-		for (let i = 0; i < casts.length; i++) {
-			push();
-			stroke(255);
-			strokeWeight(2);
-			line(this.pos.x, this.pos.y, casts[i].x, casts[i].y);
-			pop();
+		if (drawRaycasts) {
+			// Draw the rays
+			for (let i = 0; i < casts.length; i++) {
+				push();
+				stroke(255);
+				strokeWeight(2);
+				line(this.pos.x, this.pos.y, casts[i].x, casts[i].y);
+				pop();
+			}
 		}
 
 		// Return the intersection points
-		return casts;
+		return [casts, distances];
 	}
 
 

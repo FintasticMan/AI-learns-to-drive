@@ -28,7 +28,7 @@ class Ray {
 		if (t >= 0 && t <= 1 && u >= 0) {
 			// If it is, calculate the position of the intersection, the
 			// distance from the ray's position, and return the distance
-			let intersect = createVector(0, 0);
+			const intersect = createVector();
 			intersect.x = x1 + t * (x2 - x1);
 			intersect.y = y1 + t * (y2 - y1);
 			return intersect;
