@@ -39,6 +39,9 @@ class Car {
 		// 	new Ray(this.pos, this.rotation + HALF_PI),
 		// ];
 
+		this.nn = new NeuralNetwork(this.raycasts + 2, 8, 1);
+
+		this.score = 0;
 	}
 
 	draw() {
@@ -109,7 +112,7 @@ class Car {
 		return false;
 	}
 
-	raycast(track) {
+	raycast(track, draw) {
 
 		// Calculate the rays' positions and directions
 		for (let i = 0; i < this.raycasts; i++) {
@@ -171,7 +174,7 @@ class Car {
 			}
 		}
 
-		if (drawRaycasts) {
+		if (draw) {
 			// Draw the rays
 			for (let i = 0; i < casts.length; i++) {
 				push();
@@ -188,7 +191,7 @@ class Car {
 
 
 
-	move() {
+	move(a) {
 		// My weird implementation for drifting, I use an array with the length
 		// of the amount I want the direction to lag behind, and move all of the
 		// values along it every frame
@@ -196,16 +199,21 @@ class Car {
 			this.direction[i] = this.direction[i - 1];
 		}
 
-		// If the up arrow is pressed, accelerate, otherwise decellerate
-		if (keyIsDown(UP_ARROW)) {
-			this.invSpeed = this.invSpeed * this.mult;
+		this.invSpeed = this.invSpeed * this.mult;
 
-			this.speed = this.maxSpeed - this.invSpeed;
-			// noLoop();
-		} else {
-			this.speed = this.speed * this.mult;
-			this.invSpeed = this.maxSpeed - this.speed;
-		}
+		this.speed = this.maxSpeed - this.invSpeed;
+		// noLoop();
+
+		// // If the up arrow is pressed, accelerate, otherwise decellerate
+		// if (a[0] >= 0.5) {
+		// 	this.invSpeed = this.invSpeed * this.mult;
+		//
+		// 	this.speed = this.maxSpeed - this.invSpeed;
+		// 	// noLoop();
+		// } else {
+		// 	this.speed = this.speed * this.mult;
+		// 	this.invSpeed = this.maxSpeed - this.speed;
+		// }
 
 		// If the current speed is low enough, just stop the car
 		if (this.speed < 0.05) {
@@ -214,11 +222,11 @@ class Car {
 		}
 
 		// Rotate the car
-		if (keyIsDown(LEFT_ARROW)) {
+		if (a[0] < 0.3) {
 			this.rotation -= QUARTER_PI / 12;
 			this.direction[0] -= QUARTER_PI / 12;
 		}
-		if (keyIsDown(RIGHT_ARROW)) {
+		if (a[0] > 0.7) {
 			this.rotation += QUARTER_PI / 12;
 			this.direction[0] += QUARTER_PI / 12;
 		}
@@ -226,5 +234,17 @@ class Car {
 		// Calculate the amount to move the car
 		this.pos.x += this.speed * cos(this.direction[lag - 1]);
 		this.pos.y += this.speed * sin(this.direction[lag - 1]);
+	}
+
+	think(d) {
+		let action;
+		let inputs = [];
+		for (let i = 0; i < d.length; i++) {
+			inputs.push(map(d[i], 0, width, 0, 1));
+		}
+		inputs.push(map(this.speed, 0, this.maxSpeed, 0, 1));
+		inputs.push(map(this.direction[lag - 1] - this.rotation, -1, 1, 0, 1));
+		action = this.nn.predict(inputs);
+		return action;
 	}
 }
