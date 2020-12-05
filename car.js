@@ -1,7 +1,7 @@
 class Car {
-	constructor(pos, rot) {
+	constructor(pos, rot, col) {
 		this.speed = 0;
-		this.maxSpeed = 7.5;
+		this.maxSpeed = 5;
 		this.invSpeed = this.maxSpeed;
 		// Multiplier for the acceleration and decelleration
 		this.mult = 0.955;
@@ -20,9 +20,10 @@ class Car {
 		for (var i = 0; i < lag; i++) {
 			this.direction.push(0);
 		}
+		this.direction[0] = rot;
 
-		this.raycasts = 9;
-		this.fov = PI;
+		this.raycasts = 11;
+		this.fov = PI + HALF_PI;
 		this.rays = [];
 
 		for (let i = 0; i < this.raycasts; i++) {
@@ -42,6 +43,10 @@ class Car {
 		this.nn = new NeuralNetwork(this.raycasts + 2, 8, 1);
 
 		this.score = 0;
+
+		this.colour = col;
+
+		this.checkpointsReached = 0;
 	}
 
 	draw() {
@@ -49,7 +54,7 @@ class Car {
 		rectMode(CENTER);
 		translate(this.pos);
 		rotate(this.rotation);
-		fill(127, 63);
+		fill(this.colour);
 
 		rect(0, 0, this.l, this.w);
 		pop();
@@ -75,9 +80,9 @@ class Car {
 
 		for (let i = 0; i < track.innerWalls.length; i++) {
 
-			// if (linesCross([createVector(x1, y1), createVector(x2, y2)], [track.innerWalls[i].posA, track.innerWalls[i].posB])) {
-			// 	return true;
-			// }
+			if (linesCross([createVector(x1, y1), createVector(x2, y2)], [track.innerWalls[i].posA, track.innerWalls[i].posB])) {
+				return true;
+			}
 			if (linesCross([createVector(x2, y2), createVector(x3, y3)], [track.innerWalls[i].posA, track.innerWalls[i].posB])) {
 				return true;
 			}
@@ -92,9 +97,9 @@ class Car {
 
 		for (let i = 0; i < track.outerWalls.length; i++) {
 
-			// if (linesCross([createVector(x1, y1), createVector(x2, y2)], [track.outerWalls[i].posA, track.outerWalls[i].posB])) {
-			// 	return true;
-			// }
+			if (linesCross([createVector(x1, y1), createVector(x2, y2)], [track.outerWalls[i].posA, track.outerWalls[i].posB])) {
+				return true;
+			}
 			if (linesCross([createVector(x2, y2), createVector(x3, y3)], [track.outerWalls[i].posA, track.outerWalls[i].posB])) {
 				return true;
 			}
@@ -139,7 +144,7 @@ class Car {
 				if (intersection !== false) {
 					intersections.push(intersection);
 				}
-				intersection = undefined;
+				// intersection = undefined;
 
 			}
 
@@ -150,7 +155,7 @@ class Car {
 				if (intersection !== false) {
 					intersections.push(intersection);
 				}
-				intersection = undefined;
+				// intersection = undefined;
 
 			}
 

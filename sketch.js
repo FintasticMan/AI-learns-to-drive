@@ -1,6 +1,12 @@
+// Amount of checkpoints reached is the same as the index of the array of
+// checkpoints.  This means that you only have to figure out if the car is
+// colliding with one of the checkpoints at a time, and that also means that
+// it's impossible for it to accidentally count twice or count wrong
+
+
 // The amount of cars, the amount of frames the direction lags behind the
 // rotation (used for drifting), and the positions of the walls of the track
-let amount = 500;
+let amount = 255;
 let lag = 8;
 let innerPos;
 let outerPos;
@@ -21,36 +27,99 @@ function setup() {
 	// All of the lines of the track
 
 	innerPos = [
-		[createVector(300, 200), createVector(560, 140)],
-		[createVector(560, 140), createVector(720, 230)],
-		[createVector(720, 230), createVector(800, 250)],
-		[createVector(800, 250), createVector(760, 320)],
-		[createVector(760, 320), createVector(590, 350)],
-		[createVector(590, 350), createVector(540, 500)],
-		[createVector(540, 500), createVector(350, 470)],
-		[createVector(350, 470), createVector(340, 350)],
-		[createVector(340, 350), createVector(180, 250)],
-		[createVector(180, 250), createVector(300, 200)],
+		[createVector(350, 150), createVector(475, 250)],
+		[createVector(475, 250), createVector(525, 300)],
+		[createVector(525, 300), createVector(520, 425)],
+		[createVector(520, 425), createVector(575, 490)],
+		[createVector(575, 490), createVector(580, 515)],
+		[createVector(580, 515), createVector(550, 525)],
+		[createVector(550, 525), createVector(550, 575)],
+		[createVector(550, 575), createVector(575, 600)],
+		[createVector(575, 600), createVector(625, 615)],
+		[createVector(625, 615), createVector(675, 615)],
+		[createVector(675, 615), createVector(750, 600)],
+		[createVector(750, 600), createVector(815, 550)],
+		[createVector(815, 550), createVector(965, 350)],
+		[createVector(965, 350), createVector(975, 300)],
+		[createVector(975, 300), createVector(960, 250)],
+		[createVector(960, 250), createVector(900, 200)],
+		[createVector(900, 200), createVector(965, 240)],
+		[createVector(965, 240), createVector(980, 255)],
+		[createVector(980, 255), createVector(1000, 375)],
+		[createVector(1000, 375), createVector(1025, 500)],
+		[createVector(1025, 500), createVector(1025, 545)],
+		[createVector(1025, 545), createVector(975, 565)],
+		[createVector(975, 565), createVector(750, 615)],
+		[createVector(750, 615), createVector(625, 620)],
+		[createVector(625, 620), createVector(575, 625)],
+		[createVector(575, 625), createVector(525, 625)],
+		[createVector(525, 625), createVector(475, 575)],
+		[createVector(475, 575), createVector(250, 400)],
+		[createVector(250, 400), createVector(175, 375)],
+		[createVector(175, 375), createVector(150, 350)],
+		[createVector(150, 350), createVector(175, 300)],
+		[createVector(175, 300), createVector(250, 250)],
+		[createVector(250, 250), createVector(275, 200)],
+		[createVector(275, 200), createVector(275, 175)],
+		[createVector(275, 175), createVector(225, 125)],
+		[createVector(225, 125), createVector(225, 75)],
+		[createVector(225, 75), createVector(250, 70)],
+		[createVector(250, 70), createVector(300, 110)],
+		[createVector(300, 110), createVector(350, 150)],
 	];
 
 	outerPos = [
-		[createVector(180, 120), createVector(340, 50)],
-		[createVector(340, 50), createVector(600, 60)],
-		[createVector(600, 60), createVector(750, 100)],
-		[createVector(750, 100), createVector(930, 130)],
-		[createVector(930, 130), createVector(1000, 220)],
-		[createVector(1000, 220), createVector(920, 400)],
-		[createVector(920, 400), createVector(680, 440)],
-		// [createVector(680, 440), createVector(650, 520)],
-		[createVector(680, 440), createVector(600, 640)],
-		[createVector(600, 640), createVector(250, 570)],
-		[createVector(250, 570), createVector(210, 410)],
-		[createVector(210, 410), createVector(70, 320)],
-		[createVector(70, 320), createVector(60, 200)],
-		[createVector(60, 200), createVector(180, 120)],
+		[createVector(400, 80), createVector(525, 175)],
+		[createVector(525, 175), createVector(580, 225)],
+		[createVector(580, 225), createVector(600, 270)],
+		[createVector(600, 270), createVector(600, 380)],
+		[createVector(600, 380), createVector(615, 420)],
+		[createVector(615, 420), createVector(675, 475)],
+		[createVector(675, 475), createVector(675, 515)],
+		[createVector(675, 515), createVector(670, 540)],
+		[createVector(670, 540), createVector(700, 540)],
+		[createVector(700, 540), createVector(750, 500)],
+		[createVector(750, 500), createVector(900, 300)],
+		[createVector(900, 300), createVector(900, 275)],
+		[createVector(900, 275), createVector(850, 250)],
+		[createVector(850, 250), createVector(800, 200)],
+		[createVector(800, 200), createVector(800, 150)],
+		[createVector(800, 150), createVector(825, 125)],
+		[createVector(825, 125), createVector(875, 125)],
+		[createVector(875, 125), createVector(950, 150)],
+		[createVector(950, 150), createVector(1025, 200)],
+		[createVector(1025, 200), createVector(1075, 275)],
+		[createVector(1075, 275), createVector(1075, 350)],
+		[createVector(1075, 350), createVector(1125, 550)],
+		[createVector(1125, 550), createVector(1100, 600)],
+		[createVector(1100, 600), createVector(1050, 625)],
+		[createVector(1050, 625), createVector(775, 675)],
+		[createVector(775, 675), createVector(675, 700)],
+		[createVector(675, 700), createVector(650, 685)],
+		[createVector(650, 685), createVector(635, 665)],
+		[createVector(635, 665), createVector(600, 700)],
+		[createVector(600, 700), createVector(525, 710)],
+		[createVector(525, 710), createVector(450, 700)],
+		[createVector(450, 700), createVector(425, 650)],
+		[createVector(425, 650), createVector(325, 550)],
+		[createVector(325, 550), createVector(175, 450)],
+		[createVector(175, 450), createVector(125, 425)],
+		[createVector(125, 425), createVector(50, 350)],
+		[createVector(50, 350), createVector(65, 300)],
+		[createVector(65, 300), createVector(150, 225)],
+		[createVector(150, 225), createVector(200, 175)],
+		[createVector(200, 175), createVector(175, 125)],
+		[createVector(175, 125), createVector(150, 50)],
+		[createVector(150, 50), createVector(175, 15)],
+		[createVector(175, 15), createVector(275, 10)],
+		[createVector(275, 10), createVector(400, 80)],
 	];
 
-	raceTrack = new RaceTrack(innerPos, outerPos);
+	checkpoints = [
+		[createVector(350, 150), createVector(400, 80)]
+	]
+
+	raceTrack = new RaceTrack(innerPos, outerPos, checkpoints);
 
 	newGeneration();
 
@@ -129,33 +198,37 @@ function newGeneration() {
 	// Create the correct amount of cars
 	if (cars.length === 0) {
 		for (let i = 0; i < amount; i++) {
-			cars.push(new Car(createVector(360, 120), 0));
+			cars.push(new Car(createVector(360, 120), 0.52, color(200, 63)));
 		}
 	} else {
 		let bestScore = [cars[0].score, 0];
 		let currentscore;
 		for (let i = 0; i < cars.length; i++) {
-			let currentScore = cars[i].score;
+			currentScore = cars[i].score;
 			if (currentScore > bestScore[0]) {
 				bestScore = [currentScore, i];
 			}
 		}
-		let nn = cars[bestScore[1]].nn;
-		cars[0] = new Car(createVector(360, 120), 0);
-		cars[0].nn = nn;
+		let nn = cars[bestScore[1]].nn.serialize();
+		cars[amount - 1] = new Car(createVector(360, 120), 0.52, color(0, 0, 255, 127));
+		cars[amount - 1].nn = NeuralNetwork.deserialize(nn);
+		// console.log(nn.serialize());
 
-		for (let i = 1; i < cars.length; i++) {
-			cars[i] = new Car(createVector(360, 120), 0);
+		for (let i = 0; i < cars.length - 1; i++) {
+			cars[i] = new Car(createVector(360, 120), 0.52, color(200, 63));
+			cars[i].nn = NeuralNetwork.deserialize(nn);
+			// console.log(cars[i].nn.serialize());
 			cars[i].nn.mutate(mutate);
 		}
+		// noLoop();
 	}
 
 	generation++;
 }
 
 function mutate(x) {
-  if (random(1) < 0.5) {
-    let offset = randomGaussian() * 0.25;
+  if (random(1) < 0.025) {
+    let offset = randomGaussian() * 255;
     let newx = x + offset;
     return newx;
   } else {
