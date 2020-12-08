@@ -27,32 +27,30 @@ function setup() {
 	// All of the lines of the track
 
 	innerPos = [
-		[createVector(350, 150), createVector(475, 250)],
-		[createVector(475, 250), createVector(525, 300)],
+		[createVector(350, 150), createVector(525, 300)],
 		[createVector(525, 300), createVector(520, 425)],
 		[createVector(520, 425), createVector(575, 490)],
 		[createVector(575, 490), createVector(580, 515)],
-		[createVector(580, 515), createVector(550, 525)],
-		[createVector(550, 525), createVector(550, 575)],
-		[createVector(550, 575), createVector(575, 600)],
-		[createVector(575, 600), createVector(625, 615)],
+		[createVector(580, 515), createVector(590, 580)],
+		[createVector(590, 580), createVector(625, 615)],
 		[createVector(625, 615), createVector(675, 615)],
 		[createVector(675, 615), createVector(750, 600)],
 		[createVector(750, 600), createVector(815, 550)],
 		[createVector(815, 550), createVector(965, 350)],
 		[createVector(965, 350), createVector(975, 300)],
-		[createVector(975, 300), createVector(960, 250)],
-		[createVector(960, 250), createVector(900, 200)],
-		[createVector(900, 200), createVector(965, 240)],
-		[createVector(965, 240), createVector(980, 255)],
-		[createVector(980, 255), createVector(1000, 375)],
+		[createVector(975, 300), createVector(950, 230)],
+		[createVector(950, 230), createVector(880, 180)],
+		[createVector(880, 180), createVector(890, 135)],
+		[createVector(890, 135), createVector(935, 130)],
+		[createVector(935, 130), createVector(1000, 180)],
+		[createVector(1000, 180), createVector(1020, 255)],
+		[createVector(1020, 255), createVector(1000, 375)],
 		[createVector(1000, 375), createVector(1025, 500)],
 		[createVector(1025, 500), createVector(1025, 545)],
 		[createVector(1025, 545), createVector(975, 565)],
 		[createVector(975, 565), createVector(750, 615)],
-		[createVector(750, 615), createVector(625, 620)],
-		[createVector(625, 620), createVector(575, 625)],
-		[createVector(575, 625), createVector(525, 625)],
+		[createVector(750, 615), createVector(625, 640)],
+		[createVector(625, 640), createVector(525, 625)],
 		[createVector(525, 625), createVector(475, 575)],
 		[createVector(475, 575), createVector(250, 400)],
 		[createVector(250, 400), createVector(175, 375)],
@@ -61,16 +59,13 @@ function setup() {
 		[createVector(175, 300), createVector(250, 250)],
 		[createVector(250, 250), createVector(275, 200)],
 		[createVector(275, 200), createVector(275, 175)],
-		[createVector(275, 175), createVector(225, 125)],
-		[createVector(225, 125), createVector(225, 75)],
-		[createVector(225, 75), createVector(250, 70)],
-		[createVector(250, 70), createVector(300, 110)],
-		[createVector(300, 110), createVector(350, 150)],
+		[createVector(275, 175), createVector(255, 130)],
+		[createVector(255, 130), createVector(270, 90)],
+		[createVector(270, 90), createVector(350, 150)],
 	];
 
 	outerPos = [
-		[createVector(400, 80), createVector(525, 175)],
-		[createVector(525, 175), createVector(580, 225)],
+		[createVector(400, 80), createVector(580, 225)],
 		[createVector(580, 225), createVector(600, 270)],
 		[createVector(600, 270), createVector(600, 380)],
 		[createVector(600, 380), createVector(615, 420)],
@@ -83,25 +78,24 @@ function setup() {
 		[createVector(900, 300), createVector(900, 275)],
 		[createVector(900, 275), createVector(850, 250)],
 		[createVector(850, 250), createVector(800, 200)],
-		[createVector(800, 200), createVector(800, 150)],
-		[createVector(800, 150), createVector(825, 125)],
-		[createVector(825, 125), createVector(875, 125)],
-		[createVector(875, 125), createVector(950, 150)],
-		[createVector(950, 150), createVector(1025, 200)],
-		[createVector(1025, 200), createVector(1075, 275)],
-		[createVector(1075, 275), createVector(1075, 350)],
-		[createVector(1075, 350), createVector(1125, 550)],
+		[createVector(800, 200), createVector(780, 150)],
+		[createVector(780, 150), createVector(800, 100)],
+		[createVector(800, 100), createVector(870, 65)],
+		[createVector(870, 65), createVector(950, 65)],
+		[createVector(950, 65), createVector(1025, 90)],
+		[createVector(1025, 90), createVector(1100, 170)],
+		[createVector(1100, 170), createVector(1100, 275)],
+		[createVector(1100, 275), createVector(1090, 350)],
+		[createVector(1090, 350), createVector(1125, 550)],
 		[createVector(1125, 550), createVector(1100, 600)],
 		[createVector(1100, 600), createVector(1050, 625)],
 		[createVector(1050, 625), createVector(775, 675)],
 		[createVector(775, 675), createVector(675, 700)],
-		[createVector(675, 700), createVector(650, 685)],
-		[createVector(650, 685), createVector(635, 665)],
-		[createVector(635, 665), createVector(600, 700)],
+		[createVector(675, 700), createVector(630, 685)],
+		[createVector(630, 685), createVector(600, 700)],
 		[createVector(600, 700), createVector(525, 710)],
-		[createVector(525, 710), createVector(450, 700)],
-		[createVector(450, 700), createVector(425, 650)],
-		[createVector(425, 650), createVector(325, 550)],
+		[createVector(525, 710), createVector(470, 690)],
+		[createVector(470, 690), createVector(325, 550)],
 		[createVector(325, 550), createVector(175, 450)],
 		[createVector(175, 450), createVector(125, 425)],
 		[createVector(125, 425), createVector(50, 350)],
@@ -109,10 +103,12 @@ function setup() {
 		[createVector(65, 300), createVector(150, 225)],
 		[createVector(150, 225), createVector(200, 175)],
 		[createVector(200, 175), createVector(175, 125)],
-		[createVector(175, 125), createVector(150, 50)],
-		[createVector(150, 50), createVector(175, 15)],
-		[createVector(175, 15), createVector(275, 10)],
-		[createVector(275, 10), createVector(400, 80)],
+		[createVector(175, 125), createVector(160, 70)],
+		[createVector(160, 70), createVector(190, 30)],
+		[createVector(190, 30), createVector(225, 15)],
+		[createVector(225, 15), createVector(275, 10)],
+		[createVector(275, 10), createVector(335, 25)],
+		[createVector(335, 25), createVector(400, 80)],
 	];
 
 	checkpoints = [
@@ -157,14 +153,15 @@ function draw() {
 				}
 			}
 
-		} else {
-			deadCars++;
 		}
+		// else {
+		// 	deadCars++;
+		// }
 	}
 	if (deadCars === cars.length) {
 		newGeneration();
 	}
-	deadCars = 0;
+	// deadCars = 0;
 }
 
 
@@ -218,17 +215,18 @@ function newGeneration() {
 			cars[i] = new Car(createVector(360, 120), 0.52, color(200, 63));
 			cars[i].nn = NeuralNetwork.deserialize(nn);
 			// console.log(cars[i].nn.serialize());
-			cars[i].nn.mutate(mutate);
+			cars[i].nn.mutate(mutateItem);
 		}
 		// noLoop();
 	}
 
 	generation++;
+	deadCars = 0;
 }
 
-function mutate(x) {
-  if (random(1) < 0.025) {
-    let offset = randomGaussian() * 255;
+function mutateItem(x) {
+  if (random(1) < 0.05) {
+    let offset = randomGaussian() * 512;
     let newx = x + offset;
     return newx;
   } else {
