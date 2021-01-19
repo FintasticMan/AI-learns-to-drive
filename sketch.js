@@ -19,11 +19,30 @@ let generation = 0;
 const cars = [];
 let raceTrack;
 
-let speed = 16;
+let speed;
 let visual = true;
 
+// HTML elements
+let fpsSpan;
+let cpsSpan;
+let carsSpan;
+let genSpan;
+
+// User-controlled values
+let pauseButton;
+let pause = false;
+let visualButton;
+let castsButton;
+let fitnessButton;
+let showFitness = true;
+let speedSlider;
+let speedSpan;
+
+let canvas;
+
 function setup() {
-	createCanvas(1280, 720);
+	canvas = createCanvas(1280, 720);
+	canvas.parent("#canvas");
 	background(191);
 	strokeWeight(4);
 
@@ -31,22 +50,18 @@ function setup() {
 
 	raceTrack = new RaceTrack(innerPos, outerPos, checkpoints);
 
+	makeElements();
+
 	newGeneration();
 
 	// noLoop();
 }
 
 function draw() {
-	if (keyIsDown(DOWN_ARROW)) {
-		visual = false;
-		// speed = 1;
-	} else if (keyIsDown(UP_ARROW)) {
-		visual = true;
-		// speed = 10;
-	}
-
 	clear();
 	background(191);
+
+	checkUserInputs();
 
 	for (let j = 0; j < speed; j++) {
 		calcPos();
@@ -61,13 +76,78 @@ function draw() {
 		newGeneration();
 	}
 
-	push();
-	textSize(16);
-	textFont("monospace");
-	text("FPS: " + round(frameRate()), 16, 32);
-	text("cars: " + (amount - deadCars), 16, 64);
-	text("generation: " + generation, 16, 96);
-	pop();
+	fpsSpan.html(round(frameRate()));
+	cpsSpan.html(round(frameRate() * speed));
+	carsSpan.html(amount - deadCars);
+	genSpan.html(generation);
+}
+
+
+function checkUserInputs() {
+	speed = speedSlider.value();
+	speedSpan.html(speed);
+}
+
+function makeElements() {
+	fpsSpan = select("#fps");
+	cpsSpan = select("#cps");
+	carsSpan = select("#cars");
+	genSpan = select("#gen");
+
+	pauseButton = select("#pause");
+	pauseButton.mousePressed(togglePause);
+	visualButton = select("#visual");
+	visualButton.mousePressed(toggleVisual);
+	castsButton = select("#casts");
+	castsButton.mousePressed(toggleCasts);
+	fitnessButton = select("#fitness");
+	fitnessButton.mousePressed(toggleFitness);
+
+	speedSlider = select("#speedSlider");
+	speedSpan = select("#speed");
+}
+
+
+function togglePause() {
+	pause = !pause;
+
+	if (pause) {
+		noLoop();
+		pauseButton.html("play");
+	} else {
+		loop();
+		pauseButton.html("pause");
+	}
+}
+
+function toggleVisual() {
+	visual = !visual;
+
+	if (visual) {
+		visualButton.html("hide everything");
+	} else {
+		visualButton.html("show everything");
+	}
+}
+
+function toggleCasts() {
+	drawRaycasts = !drawRaycasts;
+
+	if (drawRaycasts) {
+		castsButton.html("hide raycasts");
+	} else {
+		castsButton.html("show raycasts");
+	}
+}
+
+function toggleFitness() {
+	showFitness = !showFitness;
+
+	if (showFitness) {
+		fitnessButton.html("hide fitness");
+	} else {
+		fitnessButton.html("show fitness");
+	}
 }
 
 
@@ -148,23 +228,6 @@ function mutateItem(x) {
 	}
 }
 
-// function mutateLittle(x) {
-// 	if (random() < 0.04) {
-// 		let offset = randomGaussian(0, 0.1);
-// 		let newx = x + offset;
-// 		if (newx < -1) {
-// 			newx = -1;
-// 		} else if (newx > 1) {
-// 			newx = 1;
-// 		}
-// 		console.log(newx);
-// 		return newx;
-// 		// return random(-1, 1);
-// 	} else {
-// 		return x;
-// 	}
-// }
-
 function calcPos() {
 	// Cycle through all of the cars
 	for (let i = 0; i < cars.length; i++) {
@@ -182,6 +245,12 @@ function calcPos() {
 			}
 
 		}
+	}
+
+	if (deadCars === cars.length - 1 && cars[amount - 1].alive) {
+		cars[amount - 1].score++;
+		cars[amount - 1].alive = false;
+		deadCars++;
 	}
 }
 

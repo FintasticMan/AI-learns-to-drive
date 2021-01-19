@@ -12,6 +12,24 @@
 		<script defer src="ray.js"></script>
 		<script defer src="car.js"></script>
 		<script defer src="sketch.js"></script>
+		<link rel="stylesheet" href="style.css">
 	</head>
-	<body></body>
+	<body>
+		<div id="canvas"></div>
+
+		<p>
+			FPS: <span id="fps">0</span>
+			<br />CPS: <span id="cps">0</span> (calculations per second)
+			<br />cars: <span id="cars">0</span>
+			<br />generation: <span id="gen">0</span>
+		</p>
+
+		<p>
+			<button id="pause">pause</button>
+			<br /><button id="visual">hide everything</button>
+			<br /><button id="casts">show raycasts</button>
+			<br /><button id="fitness">hide fitness</button>
+			<br />speed: <span id="speed">1</span> 1<input id="speedSlider" type="range" min="1" max="16" value="1">16
+		</p>
+	</body>
 </html>

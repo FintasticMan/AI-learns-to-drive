@@ -58,6 +58,15 @@ class Car {
 
 		rect(0, 0, this.l, this.w);
 		pop();
+
+		if (showFitness) {
+			push();
+			textFont("monospace");
+			textSize(16);
+			fill(0, 255, 0);
+			text(this.score, this.pos.x + 5, this.pos.y - 5);
+			pop();
+		}
 	}
 
 	isColliding(track) {
@@ -184,7 +193,7 @@ class Car {
 			for (let i = 0; i < casts.length; i++) {
 				push();
 				stroke(255);
-				strokeWeight(2);
+				strokeWeight(1);
 				line(this.pos.x, this.pos.y, casts[i].x, casts[i].y);
 				pop();
 			}
