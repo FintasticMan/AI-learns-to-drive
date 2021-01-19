@@ -45,8 +45,6 @@ class Car {
 		this.score = 0;
 
 		this.colour = col;
-
-		this.checkpointsReached = 0;
 	}
 
 	draw() {
