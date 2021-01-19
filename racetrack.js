@@ -16,7 +16,7 @@ class RaceTrack {
 		for (let i = 0; i < this.innerWalls.length; i++) {
 			this.innerWalls[i].draw();
 		}
-		
+
 		for (let i = 0; i < this.outerWalls.length; i++) {
 			this.outerWalls[i].draw();
 		}
