@@ -22,8 +22,8 @@ class Car {
 		}
 		this.direction[0] = rot;
 
-		this.raycasts = 11;
-		this.fov = PI + HALF_PI;
+		this.raycasts = 9;
+		this.fov = PI + HALF_PI / 2;
 		this.rays = [];
 
 		for (let i = 0; i < this.raycasts; i++) {
@@ -47,9 +47,18 @@ class Car {
 		this.colour = col;
 
 		this.checkpointsReached = 0;
+
+		this.x1 = 0;
+		this.y1 = 0;
+		this.x2 = 0;
+		this.y2 = 0;
+		this.x3 = 0;
+		this.y3 = 0;
+		this.x4 = 0;
+		this.y4 = 0;
 	}
 
-	draw() {
+	draw(track) {
 		push();
 		rectMode(CENTER);
 		translate(this.pos);
@@ -62,43 +71,45 @@ class Car {
 		if (showFitness) {
 			push();
 			textFont("monospace");
-			textSize(16);
-			fill(0, 255, 0);
-			text(this.score, this.pos.x + 5, this.pos.y - 5);
+			textSize(24);
+			fill(0, 63, 127);
+			text(this.score, this.pos.x + 16, this.pos.y);
+			let sinceLap = this.checkpointsReached % track.checkpoints.length;
+			text(String((this.checkpointsReached - sinceLap) / track.checkpoints.length) + " " + String(sinceLap), this.pos.x + 16, this.pos.y + 24);
 			pop();
 		}
 	}
 
 	isColliding(track) {
-		// Calculate all four corners of the car
-
-		let x1 = this.pos.x + this.hyp * cos(this.rotation + this.theta);
-		let y1 = this.pos.y + this.hyp * sin(this.rotation + this.theta);
-
-		let x2 = this.pos.x + this.hyp * cos(this.rotation - this.theta);
-		let y2 = this.pos.y + this.hyp * sin(this.rotation - this.theta);
-
-		let x3 = this.pos.x - this.hyp * cos(this.rotation + this.theta);
-		let y3 = this.pos.y - this.hyp * sin(this.rotation + this.theta);
-
-		let x4 = this.pos.x - this.hyp * cos(this.rotation - this.theta);
-		let y4 = this.pos.y - this.hyp * sin(this.rotation - this.theta);
+		// // Calculate all four corners of the car
+		//
+		// let x1 = this.pos.x + this.hyp * cos(this.rotation + this.theta);
+		// let y1 = this.pos.y + this.hyp * sin(this.rotation + this.theta);
+		//
+		// let x2 = this.pos.x + this.hyp * cos(this.rotation - this.theta);
+		// let y2 = this.pos.y + this.hyp * sin(this.rotation - this.theta);
+		//
+		// let x3 = this.pos.x - this.hyp * cos(this.rotation + this.theta);
+		// let y3 = this.pos.y - this.hyp * sin(this.rotation + this.theta);
+		//
+		// let x4 = this.pos.x - this.hyp * cos(this.rotation - this.theta);
+		// let y4 = this.pos.y - this.hyp * sin(this.rotation - this.theta);
 
 
 		// Check if colliding with each separate wall
 
 		for (let i = 0; i < track.innerWalls.length; i++) {
 
-			if (linesCross([createVector(x1, y1), createVector(x2, y2)], [track.innerWalls[i].posA, track.innerWalls[i].posB])) {
+			if (linesCross([createVector(this.x1, this.y1), createVector(this.x2, this.y2)], [track.innerWalls[i].posA, track.innerWalls[i].posB])) {
 				return true;
 			}
-			if (linesCross([createVector(x2, y2), createVector(x3, y3)], [track.innerWalls[i].posA, track.innerWalls[i].posB])) {
+			if (linesCross([createVector(this.x2, this.y2), createVector(this.x3, this.y3)], [track.innerWalls[i].posA, track.innerWalls[i].posB])) {
 				return true;
 			}
-			// if (linesCross([createVector(x3, y3), createVector(x4, y4)], [track.innerWalls[i].posA, track.innerWalls[i].posB])) {
+			// if (linesCross([createVector(this.x3, this.y3), createVector(this.x4, this.y4)], [track.innerWalls[i].posA, track.innerWalls[i].posB])) {
 			// 	return true;
 			// }
-			if (linesCross([createVector(x4, y4), createVector(x1, y1)], [track.innerWalls[i].posA, track.innerWalls[i].posB])) {
+			if (linesCross([createVector(this.x4, this.y4), createVector(this.x1, this.y1)], [track.innerWalls[i].posA, track.innerWalls[i].posB])) {
 				return true;
 			}
 
@@ -106,16 +117,16 @@ class Car {
 
 		for (let i = 0; i < track.outerWalls.length; i++) {
 
-			if (linesCross([createVector(x1, y1), createVector(x2, y2)], [track.outerWalls[i].posA, track.outerWalls[i].posB])) {
+			if (linesCross([createVector(this.x1, this.y1), createVector(this.x2, this.y2)], [track.outerWalls[i].posA, track.outerWalls[i].posB])) {
 				return true;
 			}
-			if (linesCross([createVector(x2, y2), createVector(x3, y3)], [track.outerWalls[i].posA, track.outerWalls[i].posB])) {
+			if (linesCross([createVector(this.x2, this.y2), createVector(this.x3, this.y3)], [track.outerWalls[i].posA, track.outerWalls[i].posB])) {
 				return true;
 			}
-			// if (linesCross([createVector(x3, y3), createVector(x4, y4)], [track.outerWalls[i].posA, track.outerWalls[i].posB])) {
+			// if (linesCross([createVector(this.x3, this.y3), createVector(this.x4, this.y4)], [track.outerWalls[i].posA, track.outerWalls[i].posB])) {
 			// 	return true;
 			// }
-			if (linesCross([createVector(x4, y4), createVector(x1, y1)], [track.outerWalls[i].posA, track.outerWalls[i].posB])) {
+			if (linesCross([createVector(this.x4, this.y4), createVector(this.x1, this.y1)], [track.outerWalls[i].posA, track.outerWalls[i].posB])) {
 				return true;
 			}
 
@@ -260,5 +271,54 @@ class Car {
 		inputs.push(map(this.direction[lag - 1] - this.rotation, -1, 1, 0, 1));
 		action = this.nn.predict(inputs);
 		return action;
+	}
+
+	calcScore(track) {
+		// // Calculate all four corners of the car
+		//
+		// let x1 = this.pos.x + this.hyp * cos(this.rotation + this.theta);
+		// let y1 = this.pos.y + this.hyp * sin(this.rotation + this.theta);
+		//
+		// let x2 = this.pos.x + this.hyp * cos(this.rotation - this.theta);
+		// let y2 = this.pos.y + this.hyp * sin(this.rotation - this.theta);
+		//
+		// let x3 = this.pos.x - this.hyp * cos(this.rotation + this.theta);
+		// let y3 = this.pos.y - this.hyp * sin(this.rotation + this.theta);
+		//
+		// let x4 = this.pos.x - this.hyp * cos(this.rotation - this.theta);
+		// let y4 = this.pos.y - this.hyp * sin(this.rotation - this.theta);
+
+
+		let index = this.checkpointsReached % track.checkpoints.length;
+
+		// Check if colliding with the next checkpoint
+
+		if (linesCross([createVector(this.x1, this.y1), createVector(this.x2, this.y2)], [track.checkpoints[index].posA, track.checkpoints[index].posB])) {
+			this.checkpointsReached++;
+		} else if (linesCross([createVector(this.x2, this.y2), createVector(this.x3, this.y3)], [track.checkpoints[index].posA, track.checkpoints[index].posB])) {
+			this.checkpointsReached++;
+		} else if (linesCross([createVector(this.x4, this.y4), createVector(this.x1, this.y1)], [track.checkpoints[index].posA, track.checkpoints[index].posB])) {
+			this.checkpointsReached++;
+		}
+
+		this.score = this.checkpointsReached;
+
+	}
+
+
+	calcCorners() {
+		// Calculate all four corners of the car
+
+		this.x1 = this.pos.x + this.hyp * cos(this.rotation + this.theta);
+		this.y1 = this.pos.y + this.hyp * sin(this.rotation + this.theta);
+
+		this.x2 = this.pos.x + this.hyp * cos(this.rotation - this.theta);
+		this.y2 = this.pos.y + this.hyp * sin(this.rotation - this.theta);
+
+		this.x3 = this.pos.x - this.hyp * cos(this.rotation + this.theta);
+		this.y3 = this.pos.y - this.hyp * sin(this.rotation + this.theta);
+
+		this.x4 = this.pos.x - this.hyp * cos(this.rotation - this.theta);
+		this.y4 = this.pos.y - this.hyp * sin(this.rotation - this.theta);
 	}
 }
