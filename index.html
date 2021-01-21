@@ -18,21 +18,35 @@
 		<div id="canvas"></div>
 
 		<p>
-			FPS: <span id="fps">0</span>
-			<br />CPS: <span id="cps">0</span> (calculations per second)
-			<br />cars: <span id="cars">0</span>
-			<br />generation: <span id="gen">0</span>
-			<br />coords: <span id="mouseX">0</span> <span id="mouseY">0</span>
+			<table>
+				<tr>
+					<td>FPS: <span id="fps">0</span></td>
+					<td>CPS: <span id="cps">0</span> (calculations per second)</td>
+					<td>cars: <span id="cars">0</span></td>
+				</tr>
+				<tr>
+					<td>generation: <span id="gen">0</span></td>
+					<td>time: <span id="time">0</span></td>
+					<td>coords: <span id="mouseX">0</span> <span id="mouseY">0</span></td>
+				</tr>
+			</table>
 		</p>
 
 		<p>
-			<button id="pause">pause</button>
-			<br /><button id="visual">hide everything</button>
-			<br /><button id="casts">show raycasts</button>
-			<br /><button id="fitness">hide fitness</button>
-			<br /><button id="autoKill">don't automatically kill the best</button>
-			<br /><button id="manualKill"><b>KILL ALL CARS</b></button>
-			<br />speed: <span id="speed">1</span> 1<input id="speedSlider" type="range" min="1" max="16" value="1">16
+			<table>
+				<tr>
+					<td><button id="pause">pause</button></td>
+					<td><button id="training">start training mode</button></td>
+					<td><button id="visual">hide everything</button></td>
+					<td><button id="casts">show raycasts</button></td>
+				</tr>
+				<tr>
+					<td><button id="fitness">hide fitness</button></td>
+					<td><button id="autoKill">do automatically kill the best</button></td>
+					<td><button id="manualKill"><b>KILL ALL CARS</b></button></td>
+					<td>speed: <span id="speed">1</span> 1<input id="speedSlider" type="range" min="1" max="16" value="1">16</td>
+				</tr>
+			</table>
 		</p>
 	</body>
 </html>

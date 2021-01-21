@@ -75,7 +75,7 @@ class Car {
 			fill(0, 63, 127);
 			text(this.score, this.pos.x + 16, this.pos.y);
 			let sinceLap = this.checkpointsReached % track.checkpoints.length;
-			text(String((this.checkpointsReached - sinceLap) / track.checkpoints.length) + " " + String(sinceLap), this.pos.x + 16, this.pos.y + 24);
+			text((this.checkpointsReached - sinceLap) / track.checkpoints.length + " " + sinceLap, this.pos.x + 16, this.pos.y + 24);
 			pop();
 		}
 	}

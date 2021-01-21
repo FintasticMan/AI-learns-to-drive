@@ -28,18 +28,22 @@ let fpsSpan;
 let cpsSpan;
 let carsSpan;
 let genSpan;
+let timeSpan;
+let time = 0;
 let mouseXSpan;
 let mouseYSpan;
 
 // User-controlled values
 let pauseButton;
 let pause = false;
+let trainingButton
+let training = false;
 let visualButton;
 let castsButton;
 let fitnessButton;
 let showFitness = true;
 let autoKillButton;
-let autoKill = true;
+let autoKill = false;
 let manualKillButton;
 let speedSlider;
 let speedSpan;
@@ -72,6 +76,7 @@ function draw() {
 
 		for (let j = 0; j < speed; j++) {
 			calcPos();
+			time++;
 		}
 
 		if (visual) {
@@ -84,6 +89,7 @@ function draw() {
 		}
 
 		cpsSpan.html(round(frameRate() * speed));
+		timeSpan.html(round(time / 60) + "s");
 	} else {
 		cpsSpan.html("0");
 	}
@@ -106,11 +112,14 @@ function makeElements() {
 	cpsSpan = select("#cps");
 	carsSpan = select("#cars");
 	genSpan = select("#gen");
+	timeSpan = select("#time");
 	mouseXSpan = select("#mouseX");
 	mouseYSpan = select("#mouseY");
 
 	pauseButton = select("#pause");
 	pauseButton.mousePressed(togglePause);
+	trainingButton = select("#training");
+	trainingButton.mousePressed(toggleTraining);
 	visualButton = select("#visual");
 	visualButton.mousePressed(toggleVisual);
 	castsButton = select("#casts");
@@ -136,6 +145,26 @@ function togglePause() {
 	} else {
 		// loop();
 		pauseButton.html("pause");
+	}
+}
+
+function toggleTraining() {
+	training = !training;
+
+	if (training) {
+		visual = false;
+		visualButton.html("show everything");
+		autoKill = true;
+		autoKillButton.html("don't automatically kill the best");
+		speedSlider.value(16);
+		trainingButton.html("stop training mode");
+	} else {
+		visual = true;
+		visualButton.html("hide everything");
+		autoKill = false;
+		autoKillButton.html("do automatically kill the best");
+		speedSlider.value(1);
+		trainingButton.html("start training mode");
 	}
 }
 
@@ -246,6 +275,7 @@ function newGeneration() {
 
 	generation++;
 	deadCars = 0;
+	time = 0;
 }
 
 function mutateItem(x) {
