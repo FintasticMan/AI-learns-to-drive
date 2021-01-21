@@ -4,6 +4,7 @@ let amount = 256;
 let lag = 8;
 let innerPos;
 let outerPos;
+let checkpoints;
 
 let drawRaycasts = false;
 let deadCars = 0;
@@ -21,14 +22,23 @@ let fpsSpan;
 let cpsSpan;
 let carsSpan;
 let genSpan;
+let timeSpan;
+let time = 0;
+let mouseXSpan;
+let mouseYSpan;
 
 // User-controlled values
 let pauseButton;
 let pause = false;
+let trainingButton
+let training = false;
 let visualButton;
 let castsButton;
 let fitnessButton;
 let showFitness = true;
+let autoKillButton;
+let autoKill = false;
+let manualKillButton;
 let speedSlider;
 let speedSpan;
 
@@ -52,28 +62,37 @@ function setup() {
 }
 
 function draw() {
-	clear();
-	background(191);
-
 	checkUserInputs();
 
-	for (let j = 0; j < speed; j++) {
-		calcPos();
-	}
+	if (!pause) {
+		clear();
+		background(191);
 
-	if (visual) {
-		raceTrack.draw();
-		drawCars();
-	}
+		for (let j = 0; j < speed; j++) {
+			calcPos();
+			time++;
+		}
 
-	if (deadCars === cars.length) {
-		newGeneration();
+		if (visual) {
+			raceTrack.draw();
+			drawCars();
+		}
+
+		if (deadCars === cars.length) {
+			newGeneration();
+		}
+
+		cpsSpan.html(round(frameRate() * speed));
+		timeSpan.html(round(time / 60) + "s");
+	} else {
+		cpsSpan.html("0");
 	}
 
 	fpsSpan.html(round(frameRate()));
-	cpsSpan.html(round(frameRate() * speed));
 	carsSpan.html(amount - deadCars);
 	genSpan.html(generation);
+	mouseXSpan.html(round(mouseX));
+	mouseYSpan.html(round(mouseY));
 }
 
 
@@ -87,15 +106,24 @@ function makeElements() {
 	cpsSpan = select("#cps");
 	carsSpan = select("#cars");
 	genSpan = select("#gen");
+	timeSpan = select("#time");
+	mouseXSpan = select("#mouseX");
+	mouseYSpan = select("#mouseY");
 
 	pauseButton = select("#pause");
 	pauseButton.mousePressed(togglePause);
+	trainingButton = select("#training");
+	trainingButton.mousePressed(toggleTraining);
 	visualButton = select("#visual");
 	visualButton.mousePressed(toggleVisual);
 	castsButton = select("#casts");
 	castsButton.mousePressed(toggleCasts);
 	fitnessButton = select("#fitness");
 	fitnessButton.mousePressed(toggleFitness);
+	autoKillButton = select("#autoKill");
+	autoKillButton.mousePressed(toggleAutoKill);
+	manualKillButton = select("#manualKill");
+	manualKillButton.mousePressed(manualKill);
 
 	speedSlider = select("#speedSlider");
 	speedSpan = select("#speed");
@@ -106,11 +134,31 @@ function togglePause() {
 	pause = !pause;
 
 	if (pause) {
-		noLoop();
+		// noLoop();
 		pauseButton.html("play");
 	} else {
-		loop();
+		// loop();
 		pauseButton.html("pause");
+	}
+}
+
+function toggleTraining() {
+	training = !training;
+
+	if (training) {
+		visual = false;
+		visualButton.html("show everything");
+		autoKill = true;
+		autoKillButton.html("don't automatically kill the best");
+		speedSlider.value(16);
+		trainingButton.html("stop training mode");
+	} else {
+		visual = true;
+		visualButton.html("hide everything");
+		autoKill = false;
+		autoKillButton.html("do automatically kill the best");
+		speedSlider.value(1);
+		trainingButton.html("start training mode");
 	}
 }
 
@@ -141,6 +189,25 @@ function toggleFitness() {
 		fitnessButton.html("hide fitness");
 	} else {
 		fitnessButton.html("show fitness");
+	}
+}
+
+function toggleAutoKill() {
+	autoKill = !autoKill;
+
+	if (autoKill) {
+		autoKillButton.html("don't automatically kill the best");
+	} else {
+		autoKillButton.html("do automatically kill the best");
+	}
+}
+
+function manualKill() {
+	for (let i = 0; i < cars.length; i++) {
+		if (cars[i].alive) {
+			cars[i].alive = false;
+			deadCars++;
+		}
 	}
 }
 
@@ -202,6 +269,7 @@ function newGeneration() {
 
 	generation++;
 	deadCars = 0;
+	time = 0;
 }
 
 function mutateItem(x) {
@@ -230,7 +298,10 @@ function calcPos() {
 			let rays = cars[i].raycast(raceTrack, false);
 			let action = cars[i].think(rays[1]);
 			cars[i].move(action);
-			cars[i].score++;
+
+			cars[i].calcCorners();
+
+			cars[i].calcScore(raceTrack);
 
 			// Kill the car if it is hitting the track
 			if (cars[i].isColliding(raceTrack)) {
@@ -241,18 +312,39 @@ function calcPos() {
 		}
 	}
 
-	if (deadCars === cars.length - 1 && cars[amount - 1].alive) {
-		cars[amount - 1].score++;
-		cars[amount - 1].alive = false;
-		deadCars++;
+	if (autoKill && deadCars === cars.length - 1) {
+		let betterThan = 0;
+		let aliveCar;
+		for (let i = 0; i < cars.length; i++) {
+			if (cars[i].alive) {
+				aliveCar = i;
+				for (let j = 0; j < cars.length; j++) {
+					if (i !== j && cars[i].score > cars[j].score) {
+						betterThan++;
+					}
+				}
+			}
+		}
+
+		if (betterThan === cars.length - 1) {
+			cars[aliveCar].alive = false;
+			deadCars++;
+		}
+
+		// if (cars[bestScore[1]].alive) {
+		// 	cars[bestScore[1]].score++;
+		// 	cars[bestScore[1]].alive = false;
+		// 	deadCars++;
+		// }
 	}
+
 }
 
 function drawCars() {
 	for (let i = 0; i < cars.length; i++) {
 		if (cars[i].alive) {
 			// Draw the car and the raycasts
-			cars[i].draw();
+			cars[i].draw(raceTrack);
 			if (drawRaycasts) {
 				cars[i].raycast(raceTrack, true);
 			}
@@ -347,4 +439,36 @@ function defineTrack() {
 		[createVector(275, 10), createVector(335, 25)],
 		[createVector(335, 25), createVector(400, 80)],
 	];
+
+	checkpoints = [
+		[createVector(350, 150), createVector(400, 80)],
+		[createVector(510, 290), createVector(580, 225)],
+		[createVector(525, 325), createVector(600, 320)],
+		[createVector(520, 425), createVector(600, 380)],
+		[createVector(575, 490), createVector(675, 475)],
+		[createVector(675, 615), createVector(670, 540)],
+		[createVector(750, 600), createVector(700, 540)],
+		[createVector(750, 500), createVector(815, 550)],
+		[createVector(975, 300), createVector(900, 300)],
+		[createVector(950, 230), createVector(900, 275)],
+		[createVector(880, 180), createVector(800, 200)],
+		[createVector(880, 180), createVector(780, 150)],
+		[createVector(890, 135), createVector(800, 100)],
+		[createVector(890, 135), createVector(870, 65)],
+		[createVector(935, 130), createVector(950, 65)],
+		[createVector(965, 155), createVector(1025, 90)],
+		[createVector(1000, 180), createVector(1100, 170)],
+		[createVector(1020, 255), createVector(1100, 245)],
+		[createVector(1000, 375), createVector(1090, 350)],
+		[createVector(1025, 545), createVector(1050, 625)],
+		[createVector(625, 640), createVector(630, 685)],
+		[createVector(525, 625), createVector(470, 690)],
+		[createVector(375, 495), createVector(325, 550)],
+		[createVector(150, 350), createVector(50, 350)],
+		[createVector(275, 200), createVector(200, 175)],
+		[createVector(255, 130), createVector(175, 125)],
+		[createVector(270, 90), createVector(225, 15)],
+		[createVector(285, 105), createVector(335, 25)],
+		// [createVector(, ), createVector(, )],
+	]
 }

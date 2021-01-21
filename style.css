@@ -2,3 +2,7 @@
 	font-family: monospace;
 	font-size: 16px;
 }
+
+table, tr, td {
+	width: 1280px;
+}
