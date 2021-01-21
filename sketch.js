@@ -1,3 +1,9 @@
+// Amount of checkpoints reached is the same as the index of the array of
+// checkpoints.  This means that you only have to figure out if the car is
+// colliding with one of the checkpoints at a time, and that also means that
+// it's impossible for it to accidentally count twice or count wrong
+
+
 // The amount of cars, the amount of frames the direction lags behind the
 // rotation (used for drifting), and the positions of the walls of the track
 let amount = 256;
@@ -52,7 +58,7 @@ function setup() {
 
 	defineTrack();
 
-	raceTrack = new RaceTrack(innerPos, outerPos);
+	raceTrack = new RaceTrack(innerPos, outerPos, checkpoints);
 
 	makeElements();
 
