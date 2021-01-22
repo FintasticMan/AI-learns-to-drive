@@ -1,7 +1,7 @@
 class Car {
 	constructor(pos, rot, col) {
 		this.speed = 0;
-		this.maxSpeed = 5;
+		this.maxSpeed = 10;
 		this.invSpeed = this.maxSpeed;
 		// Multiplier for the acceleration and decelleration
 		this.mult = 0.955;
@@ -16,6 +16,7 @@ class Car {
 		this.pos = pos;
 		this.rotation = rot;
 		this.direction = [];
+		this.time = 0;
 
 		for (var i = 0; i < lag; i++) {
 			this.direction.push(0);
@@ -40,13 +41,14 @@ class Car {
 		// 	new Ray(this.pos, this.rotation + HALF_PI),
 		// ];
 
-		this.nn = new NeuralNetwork(this.raycasts + 2, 8, 1);
+		this.nn = new NeuralNetwork(this.raycasts + 2, 8, 2);
 
 		this.score = 0;
 
 		this.colour = col;
 
 		this.checkpointsReached = 0;
+		this.timeSinceCheckpoint = 0;
 
 		this.x1 = 0;
 		this.y1 = 0;
@@ -224,21 +226,21 @@ class Car {
 			this.direction[i] = this.direction[i - 1];
 		}
 
-		this.invSpeed = this.invSpeed * this.mult;
-
-		this.speed = this.maxSpeed - this.invSpeed;
+		// this.invSpeed = this.invSpeed * this.mult;
+		//
+		// this.speed = this.maxSpeed - this.invSpeed;
 		// noLoop();
 
-		// // If the up arrow is pressed, accelerate, otherwise decellerate
-		// if (a[0] >= 0.5) {
-		// 	this.invSpeed = this.invSpeed * this.mult;
-		//
-		// 	this.speed = this.maxSpeed - this.invSpeed;
-		// 	// noLoop();
-		// } else {
-		// 	this.speed = this.speed * this.mult;
-		// 	this.invSpeed = this.maxSpeed - this.speed;
-		// }
+		// If the up arrow is pressed, accelerate, otherwise decellerate
+		if (a[1] >= 0.5) {
+			this.invSpeed = this.invSpeed * this.mult;
+
+			this.speed = this.maxSpeed - this.invSpeed;
+			// noLoop();
+		} else {
+			this.speed = this.speed * this.mult;
+			this.invSpeed = this.maxSpeed - this.speed;
+		}
 
 		// If the current speed is low enough, just stop the car
 		if (this.speed < 0.05) {
@@ -295,11 +297,18 @@ class Car {
 
 		if (linesCross([createVector(this.x1, this.y1), createVector(this.x2, this.y2)], [track.checkpoints[index].posA, track.checkpoints[index].posB])) {
 			this.checkpointsReached++;
+			this.timeSinceCheckpoint = 0;
 		} else if (linesCross([createVector(this.x2, this.y2), createVector(this.x3, this.y3)], [track.checkpoints[index].posA, track.checkpoints[index].posB])) {
 			this.checkpointsReached++;
+			this.timeSinceCheckpoint = 0;
 		} else if (linesCross([createVector(this.x4, this.y4), createVector(this.x1, this.y1)], [track.checkpoints[index].posA, track.checkpoints[index].posB])) {
 			this.checkpointsReached++;
+			this.timeSinceCheckpoint = 0;
+		} else {
+			this.timeSinceCheckpoint++;
 		}
+
+		this.time++;
 
 		this.score = this.checkpointsReached;
 

@@ -152,15 +152,15 @@ function toggleTraining() {
 	training = !training;
 
 	if (training) {
-		visual = false;
-		visualButton.html("show everything");
+		// visual = false;
+		// visualButton.html("show everything");
 		autoKill = true;
 		autoKillButton.html("don't automatically kill the best");
 		speedSlider.value(16);
 		trainingButton.html("stop training mode");
 	} else {
-		visual = true;
-		visualButton.html("hide everything");
+		// visual = true;
+		// visualButton.html("hide everything");
 		autoKill = false;
 		autoKillButton.html("do automatically kill the best");
 		speedSlider.value(1);
@@ -310,7 +310,7 @@ function calcPos() {
 			cars[i].calcScore(raceTrack);
 
 			// Kill the car if it is hitting the track
-			if (cars[i].isColliding(raceTrack)) {
+			if (cars[i].isColliding(raceTrack) || cars[i].timeSinceCheckpoint >= 240) {
 				cars[i].alive = false;
 				deadCars++;
 			}
