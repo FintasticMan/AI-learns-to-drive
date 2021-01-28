@@ -36,7 +36,7 @@ This repository consists of:
 	- The amount of time in this generation (measured from the cars' perspective);  
 	- The current coordinates of the mouse (used to ease the creation of the track and checkpoints);
 
-- There are also buttons and sliders that the user can change to their liking;  
+- There are also buttons and sliders that the user can change to their liking:  
 	- A pause/play button;  
 	- A training mode button, which automatically sets some useful settings for the fastest training;  
 	- Some toggles for the visibility of things on the screen;  
